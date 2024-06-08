@@ -1,0 +1,13 @@
+{
+  "hi": "Hi",
+  "signIn": "Sign In",
+  "email": "Email",
+  "password": "Password",
+  "login": "LOGIN",
+  "forgetPassword": "Forget password?",
+  "createAccount": "Create a new Account",
+  "categories": "Categories",
+  "products": "Products",
+  "search": "Search",
+  "mostPopular": "The most poular products today"
+}
