@@ -9,5 +9,6 @@
   "categories": "Categories",
   "products": "Products",
   "search": "Search",
-  "mostPopular": "The most poular products today"
+  "mostPopular": "The most poular products today",
+  "rateFilter": "Rate filter"
 }

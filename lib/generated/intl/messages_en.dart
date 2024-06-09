@@ -34,6 +34,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "The most poular products today"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "products": MessageLookupByLibrary.simpleMessage("Products"),
+        "rateFilter": MessageLookupByLibrary.simpleMessage("Rate filter"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "signIn": MessageLookupByLibrary.simpleMessage("Sign In")
       };

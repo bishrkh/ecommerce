@@ -15,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 @RoutePage()
 class ProductsScreen extends StatefulWidget {
@@ -35,6 +36,56 @@ class _ProductsScreenState extends State<ProductsScreen> {
     super.initState();
     getProducts();
   }
+
+  Widget getProductsList(List<Product> products) {
+    double minRate = _values.start;
+    double maxRate = _values.end;
+    List<Product> filterProducts = [];
+    for (int i=0;i<products.length ;i++){
+      if (products[i].rate.rate >= minRate && products[i].rate.rate <= maxRate){
+        filterProducts.add(products[i]);
+      }
+    }
+    if (filterProducts.isEmpty){
+      return Center(child: Text('No data found',
+        style: AppStyles.bold.copyWith(fontSize: 20.sp,),
+      ),);
+    }else {
+      return AnimationLimiter(
+      child: StaggeredGridView.countBuilder(
+        physics: const BouncingScrollPhysics(),
+        crossAxisCount: 2,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+        itemCount: filterProducts.length,
+        itemBuilder: (context, index) {
+
+            Product product = filterProducts[index];
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              child: SlideAnimation(
+                duration: const Duration(milliseconds: 500),
+                child: ProductCard(
+                  id: product.id,
+                  name: product.title,
+                  description: product.description,
+                  price: product.price,
+                  image: product.image,
+                  rate: product.rate.rate,
+                ),
+              ),
+            );
+
+        },
+        staggeredTileBuilder: (index) {
+          return StaggeredTile.count(1, index.isEven ? 1.9 : 2.2);
+        },
+      ),
+    );
+    }
+  }
+
+  SfRangeValues _values = const SfRangeValues(0.0, 5.0);
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +119,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   isPassword: false,
                   isEmail: false,
                   onChange: (String value) {
-                    setState(() {
-                      // email = value;
-                    });
                   },
                   width: double.infinity,
                 ),
@@ -97,35 +145,35 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     );
                   }
                   if (state is ProductsDone) {
-                    return AnimationLimiter(
-                      child: StaggeredGridView.countBuilder(
-                        physics: const BouncingScrollPhysics(),
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 2,
-                        mainAxisSpacing: 2,
-                        itemCount: state.data.products.length,
-                        itemBuilder: (context, index) {
-                          Product product = state.data.products[index];
-                          return AnimationConfiguration.staggeredList(
-                            position: index,
-                            child: SlideAnimation(
-                              duration: const Duration(milliseconds: 500),
-                              child: ProductCard(
-                                id: product.id,
-                                name: product.title,
-                                description: product.description,
-                                price: product.price,
-                                image: product.image,
-                                rate: product.rate.rate,
-                              ),
-                            ),
-                          );
-                        },
-                        staggeredTileBuilder: (index) {
-                          return StaggeredTile.count(
-                              1, index.isEven ? 1.9 : 2.2);
-                        },
-                      ),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: Text(
+                            S.of(context).rateFilter,
+                            style: AppStyles.bold.copyWith(fontSize: 15.sp),
+                          ),
+                        ),
+                        SfRangeSlider(
+                          min: 0.0,
+                          max: 5,
+                          activeColor: AppColors.mainColor,
+                          values: _values,
+                          interval: 1,
+                          showTicks: true,
+                          showLabels: true,
+                          enableTooltip: true,
+                          minorTicksPerInterval: 1,
+                          onChanged: (SfRangeValues values) {
+                            setState(() {
+                              _values = values;
+                            });
+                          },
+                        ),
+                        5.verticalSpace,
+                        Expanded(child: getProductsList(state.data.products)),
+                      ],
                     );
                   }
                   return const Center(child: CircularLoading());

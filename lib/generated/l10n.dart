@@ -159,6 +159,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Rate filter`
+  String get rateFilter {
+    return Intl.message(
+      'Rate filter',
+      name: 'rateFilter',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
